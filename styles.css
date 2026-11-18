@@ -868,7 +868,7 @@ input, select { font: inherit; }
 .ponto-brunin { background: #6d6d78; }
 
 /* ---------- Seção Porsche (foto + vídeo) ---------- */
-.porsche-grade { display: grid; grid-template-columns: 1.05fr .95fr; gap: 60px; align-items: center; }
+.porsche-grade { display: grid; grid-template-columns: 1.05fr .95fr; gap: 60px; align-items: center; margin-top: 52px; }
 .porsche-foto {
   position: relative;
   display: block;
@@ -879,8 +879,9 @@ input, select { font: inherit; }
   overflow: hidden;
   background: #000;
   cursor: pointer;
+  margin: 0;
 }
-.porsche-foto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .8s ease, filter .8s ease; }
+.porsche-foto img { width: 100%; aspect-ratio: 9 / 16; max-height: 720px; object-fit: cover; object-position: center 25%; transition: transform .8s ease, filter .8s ease; }
 .porsche-foto:hover img, .porsche-foto.ativo img { transform: scale(1.08); filter: brightness(1.1) saturate(1.12); }
 .porsche-foto::after {
   content: "";
@@ -901,12 +902,12 @@ input, select { font: inherit; }
   border-radius: 16px;
   padding: 14px 16px;
   color: var(--texto);
+  text-align: left;
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   transform: translateY(8px);
   opacity: 0;
   transition: opacity .5s ease, transform .5s ease;
-  text-align: left;
 }
 .porsche-foto:hover .porsche-legenda, .porsche-foto.ativo .porsche-legenda { opacity: 1; transform: none; }
 .porsche-legenda strong {
@@ -920,6 +921,7 @@ input, select { font: inherit; }
 }
 .porsche-legenda span { font-size: 13.5px; color: var(--texto-suave); }
 .porsche-video { width: 100%; border-radius: 26px; border: 1px solid var(--borda); display: block; background: #000; }
+.porsche-midia { text-align: left; }
 .porsche-lista { list-style: none; margin: 22px 0 28px; padding: 0; display: grid; gap: 12px; }
 .porsche-lista li { display: flex; gap: 12px; align-items: flex-start; color: var(--texto-suave); font-size: 15.5px; line-height: 1.55; }
 .porsche-lista li::before { content: ""; flex: 0 0 auto; width: 9px; height: 9px; margin-top: 7px; background: var(--amarelo); transform: rotate(45deg); }
