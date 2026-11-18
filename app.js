@@ -147,7 +147,7 @@ var estado = { passo: 1, servico: null, profissional: null, data: "", horario: "
 function passoCompleto(n) {
   if (n === 1) return !!estado.servico;
   if (n === 2) return !!estado.profissional;
-  if (n === 3) return !!estado.data;
+  if (n === 3) return !!estado.data && estado.data >= hojeISO();
   if (n === 4) return !!estado.horario;
   if (n === 5) return estado.nome.trim().length > 1 && estado.whatsapp.replace(/\D/g, "").length >= 8;
   return false;
