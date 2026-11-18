@@ -2,26 +2,30 @@
 // Os agendamentos ficam salvos neste navegador (localStorage) e o painel
 // admin/ lê os mesmos dados. Não há cobrança de sinal nem Pix: o pagamento
 // é só na barbearia.
+//
+// Interação a cada clique: cada serviço tem foto própria (img) e um ícone SVG
+// próprio (icone) que anima ao clicar/selecionar — a animação é definida em
+// styles.css e escolhida por --anim em cada ícone (ver ICONES).
 
 var WHATS_BARBEARIA = "5511986407967";
 var STORAGE_AGENDAMENTOS = "brunin:agendamentos";
 
 var SERVICOS = [
-  { id: "corte", nome: "Corte", preco: 40, minutos: 28, detalhe: "Degradê, social, tesoura", img: "images/corte-1.jpg" },
-  { id: "pigmentacao", nome: "Pigmentação", preco: 30, minutos: 20, detalhe: "", img: "images/corte-2.jpg" },
-  { id: "selagem", nome: "Selagem", preco: 50, minutos: 20, detalhe: "", img: "images/corte-3.jpg" },
-  { id: "penteado", nome: "Penteado", preco: 20, minutos: 15, detalhe: "Dimil, selado, mandrake, bonezinho", img: "images/penteado.jpg", icone: "penteado" },
-  { id: "barba", nome: "Barba", preco: 30, minutos: 15, detalhe: "", img: "images/corte-4.jpg" },
-  { id: "corte-barba", nome: "Corte+Barba", preco: 60, minutos: 45, detalhe: "", img: "images/corte-1.jpg" },
+  { id: "corte", nome: "Corte", preco: 40, minutos: 28, detalhe: "Degradê, social, tesoura", img: "images/corte-1.jpg", icone: "tesoura" },
+  { id: "pigmentacao", nome: "Pigmentação", preco: 30, minutos: 20, detalhe: "", img: "images/corte-2.jpg", icone: "pigmento" },
+  { id: "selagem", nome: "Selagem", preco: 50, minutos: 20, detalhe: "", img: "images/corte-3.jpg", icone: "brilho" },
+  { id: "penteado", nome: "Penteado", preco: 20, minutos: 15, detalhe: "Dimil, selado, mandrake, bonezinho", img: "images/penteado.jpg", icone: "pente" },
+  { id: "barba", nome: "Barba", preco: 30, minutos: 15, detalhe: "", img: "images/corte-4.jpg", icone: "navalha" },
+  { id: "corte-barba", nome: "Corte+Barba", preco: 60, minutos: 45, detalhe: "", img: "images/corte-1.jpg", icone: "combo" },
   { id: "sobrancelha", nome: "Sobrancelha", preco: 10, minutos: 1, detalhe: "", img: "images/corte-2.jpg", icone: "sobrancelha" },
   { id: "bigode", nome: "Bigode", preco: 5, minutos: 1, detalhe: "", img: "images/corte-3.jpg", icone: "bigode" },
-  { id: "progressiva", nome: "Progressiva", preco: 80, minutos: 29, detalhe: "", img: "images/corte-4.jpg" },
-  { id: "luzes", nome: "Luzes", preco: 80, minutos: 59, detalhe: "", img: "images/corte-1.jpg" },
-  { id: "platinado", nome: "Platinado", preco: 100, minutos: 60, detalhe: "", img: "images/corte-2.jpg" },
-  { id: "alisamento", nome: "Alisamento", preco: 30, minutos: 15, detalhe: "", img: "images/corte-3.jpg" },
-  { id: "hidratacao", nome: "Hidratação", preco: 15, minutos: 15, detalhe: "", img: "images/corte-4.jpg" },
-  { id: "pezinho", nome: "Pezinho", preco: 15, minutos: 10, detalhe: "", img: "images/corte-1.jpg" },
-  { id: "corte-barba-sobrancelha", nome: "Corte+Barba+Sobrancelha", preco: 70, minutos: 50, detalhe: "", img: "images/corte-2.jpg" }
+  { id: "progressiva", nome: "Progressiva", preco: 80, minutos: 29, detalhe: "", img: "images/corte-4.jpg", icone: "chapinha" },
+  { id: "luzes", nome: "Luzes", preco: 80, minutos: 59, detalhe: "", img: "images/corte-1.jpg", icone: "luzes" },
+  { id: "platinado", nome: "Platinado", preco: 100, minutos: 60, detalhe: "", img: "images/corte-2.jpg", icone: "platinado" },
+  { id: "alisamento", nome: "Alisamento", preco: 30, minutos: 15, detalhe: "", img: "images/corte-3.jpg", icone: "alisamento" },
+  { id: "hidratacao", nome: "Hidratação", preco: 15, minutos: 15, detalhe: "", img: "images/corte-4.jpg", icone: "gota" },
+  { id: "pezinho", nome: "Pezinho", preco: 15, minutos: 10, detalhe: "", img: "images/corte-1.jpg", icone: "pezinho" },
+  { id: "corte-barba-sobrancelha", nome: "Corte+Barba+Sobrancelha", preco: 70, minutos: 50, detalhe: "", img: "images/corte-2.jpg", icone: "combo3" }
 ];
 
 var PROFISSIONAIS = [
@@ -30,10 +34,24 @@ var PROFISSIONAIS = [
   { id: "tz", nome: "TZ Barbeiro", papel: "Cortes, barba e penteados", inicial: "T" }
 ];
 
+// Ícones SVG de cada serviço (stroke/fill em currentColor: a cor vem do CSS).
+// --anim diz qual keyframe de styles.css anima o ícone ao clicar/selecionar.
 var ICONES = {
-  bigode: '<svg class="icone-bigode" viewBox="0 0 32 16" aria-hidden="true"><path d="M2 8 C6 2 12 2 16 7 C20 2 26 2 30 8 C26 13 20 13 16 9 C12 13 6 13 2 8 Z" fill="#ffc400"/></svg>',
-  sobrancelha: '<svg class="icone-sobrancelha" viewBox="0 0 32 16" aria-hidden="true"><path d="M4 12 Q16 2 28 11" stroke="#ffc400" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
-  penteado: '<svg class="icone-penteado" viewBox="0 0 32 16" aria-hidden="true"><path d="M3 13 Q6 3 14 4 Q22 5 29 12 Q20 9 14 9 Q7 9 3 13 Z" fill="#ffc400"/></svg>'
+  tesoura: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-tesoura" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8.2 7.6 20 19M8.2 16.4 20 5"/></svg>',
+  pigmento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-pigmento" aria-hidden="true"><path d="M12 3c3.4 3.9 5.8 6.8 5.8 9.8a5.8 5.8 0 1 1-11.6 0C6.2 9.8 8.6 6.9 12 3z"/><circle cx="12" cy="13.5" r="2" fill="currentColor" stroke="none"/></svg>',
+  brilho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-brilho" aria-hidden="true"><path d="M12 3l1.7 5.1L19 9.8l-5.3 1.7L12 16.6l-1.7-5.1L5 9.8l5.3-1.7z"/><path d="M18.6 15.2l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></svg>',
+  pente: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-pente" aria-hidden="true"><path d="M4 4h16v4H4z"/><path d="M6.5 8v5M10 8v7M13.5 8v7M17 8v5M20 8v3"/></svg>',
+  navalha: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-navalha" aria-hidden="true"><path d="M3.5 20.5 15 9l3.5-3.5L21 8l-3.5 3.5L6 20.5z"/><path d="M15 9l3-3"/></svg>',
+  combo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-combo" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8.2 7.6 20 19M8.2 16.4 20 5"/><path d="M19.5 2.5l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6z"/></svg>',
+  sobrancelha: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-sobrancelha" aria-hidden="true"><path d="M3 15 Q12 6 21 14"/></svg>',
+  bigode: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-bigode" aria-hidden="true"><path d="M2 9 C6 3.5 11.5 3.5 12 8 C12.5 3.5 18 3.5 22 9 C18.5 13.5 13.5 13.5 12 9.5 C10.5 13.5 5.5 13.5 2 9 Z" fill="currentColor" stroke="none"/></svg>',
+  chapinha: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-chapinha" aria-hidden="true"><path d="M8 3h8v18H8z"/><path d="M12 3v18"/><path d="M9.5 21h5"/></svg>',
+  luzes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-luzes" aria-hidden="true"><path d="M12 3v3.5M12 17.5V21M3 12h3.5M17.5 12H21"/><path d="M5.6 5.6l2.5 2.5M15.9 15.9l2.5 2.5M18.4 5.6l-2.5 2.5M8.1 15.9l-2.5 2.5"/></svg>',
+  platinado: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-platinado" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 2.5V5M12 19v2.5M2.5 12H5M19 12h2.5M5 5l1.8 1.8M17.2 17.2 19 19M19 5l-1.8 1.8M6.8 17.2 5 19"/></svg>',
+  alisamento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-alisamento" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+  gota: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-gota" aria-hidden="true"><path d="M12 3c3.4 3.9 5.8 6.8 5.8 9.8a5.8 5.8 0 1 1-11.6 0C6.2 9.8 8.6 6.9 12 3z"/><path d="M9.5 13.5a2.8 2.8 0 0 0 2 3.4"/></svg>',
+  pezinho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-pezinho" aria-hidden="true"><path d="M3 18h18"/><path d="M8 18l1.5-6h5L16 18"/><path d="M12 12V4"/></svg>',
+  combo3: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--anim:anim-combo3" aria-hidden="true"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="13" r="2"/><path d="M7.6 6.4 17 14M7.6 12.4 17 5"/><path d="M4 20 Q12 15.5 20 20"/></svg>'
 };
 
 function brl(valor) {
@@ -112,11 +130,11 @@ function renderServicos() {
     var icone = s.icone ? '<span class="servico-icone">' + ICONES[s.icone] + "</span>" : "";
     var detalhe = s.detalhe ? '<p class="servico-detalhe">' + s.detalhe + "</p>" : "";
     html += '<button class="card-servico" data-servico="' + s.id + '">' +
-      '<img src="' + s.img + '" alt="' + s.nome + '" />' +
+      '<span class="servico-foto"><img src="' + s.img + '" alt="' + s.nome + '" />' + icone + "</span>" +
       '<span class="servico-corpo">' +
-      '<span class="servico-nome">' + s.nome + "</span><br />" +
-      '<span class="servico-preco">' + brl(s.preco) + '</span> <span class="servico-tempo">· ' + s.minutos + " min</span>" +
-      detalhe + icone +
+      '<span class="servico-nome">' + s.nome + "</span>" +
+      '<span class="servico-linha"><span class="servico-preco">' + brl(s.preco) + '</span> <span class="servico-tempo">' + s.minutos + " min</span></span>" +
+      detalhe +
       "</span></button>";
   });
   grade.innerHTML = html;
@@ -185,10 +203,23 @@ function renderWizard() {
   var servico = servicoPorId(estado.servico);
   var profissional = profissionalPorId(estado.profissional);
 
+  // Prévia do serviço escolhido: a foto aparece junto com o ícone animado.
+  if (servico) {
+    var iconeDestaque = servico.icone ? '<span class="servico-icone">' + ICONES[servico.icone] + "</span>" : "";
+    var detalheDestaque = servico.detalhe ? '<span class="destaque-detalhe">' + servico.detalhe + "</span>" : "";
+    html += '<div class="servico-destaque">' +
+      '<img src="' + servico.img + '" alt="' + servico.nome + '" />' + iconeDestaque +
+      '<div class="destaque-info"><strong>' + servico.nome + "</strong>" +
+      "<span>" + brl(servico.preco) + " · " + servico.minutos + " min" + (profissional ? " · com " + profissional.nome : "") + "</span>" +
+      detalheDestaque + "</div>" +
+      '<button type="button" id="btn-trocar-servico">Trocar serviço</button></div>';
+  }
+
   if (estado.passo === 1) {
     html += '<p class="passo-titulo">1 · Escolha o serviço</p><div class="opcoes">';
     SERVICOS.forEach(function (s) {
-      html += '<button class="opcao' + (estado.servico === s.id ? " selecionado" : "") + '" data-escolher-servico="' + s.id + '">' + s.nome + " — " + brl(s.preco) + " · " + s.minutos + " min</button>";
+      var iconeOpcao = s.icone ? '<span class="opcao-icone">' + ICONES[s.icone] + "</span>" : "";
+      html += '<button class="opcao' + (estado.servico === s.id ? " selecionado" : "") + '" data-escolher-servico="' + s.id + '">' + iconeOpcao + s.nome + " — " + brl(s.preco) + " · " + s.minutos + " min</button>";
     });
     html += "</div>";
   } else if (estado.passo === 2) {
@@ -235,9 +266,14 @@ function renderWizard() {
   wizard.querySelectorAll("[data-escolher-servico]").forEach(function (b) {
     b.addEventListener("click", function () {
       estado.servico = b.getAttribute("data-escolher-servico");
+      var cartao = document.querySelector('[data-servico="' + estado.servico + '"]');
       document.querySelectorAll(".card-servico").forEach(function (c) {
         c.classList.toggle("selecionado", c.getAttribute("data-servico") === estado.servico);
       });
+      if (cartao) {
+        cartao.classList.add("mexer");
+        setTimeout(function () { cartao.classList.remove("mexer"); }, 800);
+      }
       renderWizard();
     });
   });
@@ -259,6 +295,8 @@ function renderWizard() {
   if (campoNome) campoNome.addEventListener("input", function () { estado.nome = campoNome.value; atualizarConfirmar(); });
   var campoWhats = document.getElementById("campo-whats");
   if (campoWhats) campoWhats.addEventListener("input", function () { estado.whatsapp = campoWhats.value; atualizarConfirmar(); });
+  var btnTrocar = document.getElementById("btn-trocar-servico");
+  if (btnTrocar) btnTrocar.addEventListener("click", function () { estado.passo = 1; renderWizard(); });
   var btnVoltar = document.getElementById("btn-voltar");
   if (btnVoltar) btnVoltar.addEventListener("click", function () { estado.passo = Math.max(1, estado.passo - 1); renderWizard(); });
   var btnContinuar = document.getElementById("btn-continuar");
@@ -433,6 +471,10 @@ document.addEventListener("DOMContentLoaded", function () {
       renderWizard();
       document.getElementById("agendar").scrollIntoView({ behavior: "smooth" });
     });
+  });
+  // Foto da Porsche: ao clicar, alterna zoom + brilho amarelo + revelação da legenda.
+  document.querySelectorAll(".porsche-foto").forEach(function (foto) {
+    foto.addEventListener("click", function () { foto.classList.toggle("ativo"); });
   });
   document.getElementById("assistente-botao").addEventListener("click", abrirAssistente);
   document.getElementById("assistente-fechar").addEventListener("click", fecharAssistente);
