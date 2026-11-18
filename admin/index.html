@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Barbearia BruninDucorte</title>
+  <meta name="description" content="Painel administrativo da Barbearia BruninDucorte: agendamentos por funcionário e divisão 40% funcionário / 60% Bruninho." />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="topo">
+    <a class="logo" href="../">BD<span>·01</span></a>
+    <nav>
+      <a href="../">Site</a>
+      <a href="../#servicos">Serviços</a>
+      <a href="../#agendar">Agendar</a>
+    </nav>
+  </header>
+
+  <main class="secao">
+    <p class="kicker">Painel administrativo</p>
+    <h2>Admin — BruninDucorte</h2>
+    <p class="sub">Os agendamentos ficam salvos neste navegador (localStorage). Para produção, ligue o painel a um banco de dados e proteja esta página com senha.</p>
+
+    <div class="resumo-cards" id="resumo-cards"></div>
+
+    <h3>Gerar valor por funcionário</h3>
+    <p>Escolha o funcionário e clique em “Gerar valor”: o cálculo é 40% para o funcionário e 60% para o Bruninho. Ex.: total R$ 2.000 → funcionário R$ 800 · Bruninho R$ 1.200.</p>
+    <div class="admin-acoes">
+      <select id="funcionario" aria-label="Funcionário">
+        <option value="karl">Karl</option>
+        <option value="tz">TZ Barbeiro</option>
+        <option value="brunin">BruninDucorte</option>
+      </select>
+      <button class="btn-continuar" id="btn-gerar">Gerar valor</button>
+    </div>
+    <div class="resultado" id="resultado" hidden></div>
+
+    <h3>Todos os agendamentos</h3>
+    <div id="tabela-agendamentos"></div>
+
+    <div class="admin-acoes">
+      <button class="btn-escuro" id="btn-exemplos">Adicionar agendamentos de exemplo</button>
+      <button class="btn-escuro" id="btn-remover-exemplos">Remover exemplos</button>
+      <button class="btn-escuro" id="btn-limpar">Apagar todos os agendamentos</button>
+    </div>
+    <p class="nota">Os agendamentos de exemplo estão marcados como “exemplo” e servem só para demonstrar o cálculo — apague-os quando os agendamentos reais começarem.</p>
+  </main>
+
+  <script>
+    var STORAGE_AGENDAMENTOS = "brunin:agendamentos";
+    var STORAGE_EXEMPLOS = "brunin:exemplos";
+    var PROFISSIONAIS = {
+      brunin: "BruninDucorte",
+      karl: "Karl",
+      tz: "TZ Barbeiro"
+    };
+
+    function brl(valor) {
+      return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
+
+    function dataBR(iso) {
+      var p = iso.split("-");
+      return p[2] + "/" + p[1] + "/" + p[0];
+    }
+
+    function ler(chave) {
+      try { return JSON.parse(localStorage.getItem(chave) || "[]"); }
+      catch (e) { return []; }
+    }
+
+    function gravar(chave, lista) {
+      try { localStorage.setItem(chave, JSON.stringify(lista)); }
+      catch (e) { /* armazenamento indisponível */ }
+    }
+
+    function todos() {
+      var reais = ler(STORAGE_AGENDAMENTOS).map(function (a) { a.origem = "real"; return a; });
+      var exemplos = ler(STORAGE_EXEMPLOS).map(function (a) { a.origem = "exemplo"; return a; });
+      return reais.concat(exemplos);
+    }
+
+    function renderResumo() {
+      var lista = todos();
+      var total = 0;
+      var porFuncionario = { brunin: { n: 0, total: 0 }, karl: { n: 0, total: 0 }, tz: { n: 0, total: 0 } };
+      lista.forEach(function (a) {
+        total += a.preco;
+        if (porFuncionario[a.profissionalId]) {
+          porFuncionario[a.profissionalId].n += 1;
+          porFuncionario[a.profissionalId].total += a.preco;
+        }
+      });
+      var html = '<div class="card-resumo"><div class="numero">' + lista.length + '</div><p>Agendamentos</p></div>' +
+        '<div class="card-resumo"><div class="numero">' + brl(total) + '</div><p>Total em serviços</p></div>';
+      Object.keys(porFuncionario).forEach(function (id) {
+        var f = porFuncionario[id];
+        html += '<div class="card-resumo"><div class="numero">' + f.n + '</div><p>' + PROFISSIONAIS[id] + ' · ' + brl(f.total) + '</p></div>';
+      });
+      document.getElementById("resumo-cards").innerHTML = html;
+    }
+
+    function renderTabela() {
+      var lista = todos();
+      var area = document.getElementById("tabela-agendamentos");
+      if (!lista.length) {
+        area.innerHTML = "<p>Nenhum agendamento ainda. Faça um agendamento no site ou adicione os exemplos para demonstrar o cálculo.</p>";
+        return;
+      }
+      var html = '<table class="tabela"><thead><tr><th>Data</th><th>Horário</th><th>Serviço</th><th>Profissional</th><th>Cliente</th><th>Valor</th><th>Origem</th></tr></thead><tbody>';
+      lista.forEach(function (a) {
+        html += "<tr><td>" + dataBR(a.data) + "</td><td>" + a.horario + "</td><td>" + a.servicoNome + "</td><td>" + a.profissionalNome + "</td><td>" + a.nome + "</td><td>" + brl(a.preco) + "</td><td>" + a.origem + "</td></tr>";
+      });
+      html += "</tbody></table>";
+      area.innerHTML = html;
+    }
+
+    function gerarValor() {
+      var id = document.getElementById("funcionario").value;
+      var nome = PROFISSIONAIS[id];
+      var lista = todos().filter(function (a) { return a.profissionalId === id; });
+      var total = 0;
+      lista.forEach(function (a) { total += a.preco; });
+      var parteFuncionario = total * 0.4;
+      var parteBruninho = total * 0.6;
+      var resultado = document.getElementById("resultado");
+      var html = "<h3>" + nome + " — " + lista.length + " serviço(s)</h3>" +
+        "<p>Total: <span class=\"valor-destaque\">" + brl(total) + "</span></p>" +
+        "<p>Funcionário (40%): <span class=\"valor-destaque\">" + brl(parteFuncionario) + "</span></p>" +
+        "<p>Bruninho (60%): <span class=\"valor-destaque\">" + brl(parteBruninho) + "</span></p>";
+      if (lista.length) {
+        html += '<table class="tabela"><thead><tr><th>Data</th><th>Serviço</th><th>Cliente</th><th>Valor</th></tr></thead><tbody>';
+        lista.forEach(function (a) {
+          html += "<tr><td>" + dataBR(a.data) + "</td><td>" + a.servicoNome + "</td><td>" + a.nome + "</td><td>" + brl(a.preco) + "</td></tr>";
+        });
+        html += "</tbody></table>";
+      } else {
+        html += "<p>Nenhum serviço registrado para " + nome + " ainda.</p>";
+      }
+      resultado.innerHTML = html;
+      resultado.hidden = false;
+    }
+
+    function adicionarExemplos() {
+      if (ler(STORAGE_EXEMPLOS).length) return;
+      var exemplos = [
+        { id: "ex-1", servicoId: "corte", servicoNome: "Corte", preco: 40, minutos: 28, profissionalId: "karl", profissionalNome: "Karl", data: "2026-11-18", horario: "10:00", nome: "Cliente Exemplo 1", whatsapp: "(11) 90000-0001", criadoEm: "2026-11-18T10:00:00" },
+        { id: "ex-2", servicoId: "corte-barba", servicoNome: "Corte+Barba", preco: 60, minutos: 45, profissionalId: "karl", profissionalNome: "Karl", data: "2026-11-18", horario: "11:00", nome: "Cliente Exemplo 2", whatsapp: "(11) 90000-0002", criadoEm: "2026-11-18T11:00:00" },
+        { id: "ex-3", servicoId: "corte", servicoNome: "Corte", preco: 40, minutos: 28, profissionalId: "tz", profissionalNome: "TZ Barbeiro", data: "2026-11-18", horario: "14:00", nome: "Cliente Exemplo 3", whatsapp: "(11) 90000-0003", criadoEm: "2026-11-18T14:00:00" },
+        { id: "ex-4", servicoId: "barba", servicoNome: "Barba", preco: 30, minutos: 15, profissionalId: "tz", profissionalNome: "TZ Barbeiro", data: "2026-11-18", horario: "15:00", nome: "Cliente Exemplo 4", whatsapp: "(11) 90000-0004", criadoEm: "2026-11-18T15:00:00" }
+      ];
+      gravar(STORAGE_EXEMPLOS, exemplos);
+      renderResumo();
+      renderTabela();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      renderResumo();
+      renderTabela();
+      document.getElementById("btn-gerar").addEventListener("click", gerarValor);
+      document.getElementById("btn-exemplos").addEventListener("click", adicionarExemplos);
+      document.getElementById("btn-remover-exemplos").addEventListener("click", function () {
+        gravar(STORAGE_EXEMPLOS, []);
+        renderResumo();
+        renderTabela();
+      });
+      document.getElementById("btn-limpar").addEventListener("click", function () {
+        if (!confirm("Apagar TODOS os agendamentos (reais e exemplos)?")) return;
+        gravar(STORAGE_AGENDAMENTOS, []);
+        gravar(STORAGE_EXEMPLOS, []);
+        document.getElementById("resultado").hidden = true;
+        renderResumo();
+        renderTabela();
+      });
+    });
+  </script>
+</body>
+</html>
