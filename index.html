@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Barbearia BruninDucorte — Barbearia 01 de Diadema</title>
   <meta name="description" content="Barbearia BruninDucorte — Barbearia 01 de Diadema. Corte, barba, penteado, pigmentação e mais. Agende sem sinal, pague na barbearia. Rua Rossini 37, Casa Grande, Diadema – SP." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -27,13 +30,21 @@
         <p class="hero-kicker">Barbearia 01 de Diadema</p>
         <h1>BRUNIN<span>DUCORTE</span></h1>
         <p class="hero-frase">Navalha afiada, degradê na régua. Tu senta, a gente resolve.</p>
-        <a class="btn-amarelo" href="#agendar">Agendar horário</a>
-        <p class="hero-aviso">Sem sinal · paga na barbearia</p>
+        <div class="hero-chips">
+          <span class="chip">Sem sinal</span>
+          <span class="chip">Paga na barbearia</span>
+          <span class="chip">Seg a sáb · 9h às 20h</span>
+        </div>
+        <div class="hero-acoes">
+          <a class="btn-amarelo" href="#agendar">Agendar horário</a>
+          <a class="btn-outline" href="https://wa.me/5511986407967" target="_blank" rel="noopener">Falar no WhatsApp</a>
+        </div>
       </div>
+      <a class="hero-rolar" href="#servicos">Role para ver os serviços <span>↓</span></a>
     </section>
 
     <!-- Profissionais -->
-    <section class="secao" id="time">
+    <section class="secao secao--centro" id="time">
       <p class="kicker">O time</p>
       <h2>Quem corta</h2>
       <div class="time-grade">
@@ -61,25 +72,29 @@
 
     <!-- Sobre -->
     <section class="secao" id="sobre">
-      <p class="kicker">Sobre</p>
-      <h2>Bruno Teixeira</h2>
       <div class="sobre-grade">
         <div class="sobre-texto">
-          <p>Cria de Diadema, Bruno transformou a cadeira na Casa Grande em ponto de encontro: a Barbearia 01 de Diadema é onde o corte é na régua, a resenha é boa e ninguém sai sem estar no estilo.</p>
-          <p><strong>Endereço:</strong> Rua Rossini 37, Casa Grande, Diadema – SP</p>
-          <p><strong>Horário:</strong> segunda a sábado, 9h às 20h</p>
-          <p><strong>Instagram:</strong> <a href="https://instagram.com/brunin.ducorte" target="_blank" rel="noopener">@brunin.ducorte</a></p>
-          <p><strong>WhatsApp:</strong> <a href="https://wa.me/5511986407967" target="_blank" rel="noopener">(11) 98640-7967</a></p>
+          <p class="kicker">Sobre</p>
+          <h2>Bruno Teixeira</h2>
+          <p class="sobre-destaque">Cria de Diadema, Bruno transformou a cadeira na Casa Grande em ponto de encontro: a Barbearia 01 de Diadema é onde o degradê sai na régua e o papo é reto.</p>
+          <ul class="sobre-info">
+            <li><span class="sobre-icone">📍</span><div><strong>Endereço</strong><span>Rua Rossini 37, Casa Grande, Diadema – SP</span></div></li>
+            <li><span class="sobre-icone">🕘</span><div><strong>Horário</strong><span>Segunda a sábado, 9h às 20h</span></div></li>
+            <li><span class="sobre-icone">📸</span><div><strong>Instagram</strong><a href="https://instagram.com/brunin.ducorte" target="_blank" rel="noopener">@brunin.ducorte</a></div></li>
+            <li><span class="sobre-icone">💬</span><div><strong>WhatsApp</strong><a href="https://wa.me/5511986407967" target="_blank" rel="noopener">(11) 98640-7967</a></div></li>
+          </ul>
+          <a class="btn-amarelo" href="#agendar">Agendar horário</a>
         </div>
         <div class="sobre-fotos">
           <img src="images/bruninho-barbearia.jpg" alt="Bruno em frente à Barbearia BruninDucorte" />
           <img src="images/bruninho.jpg" alt="Bruno Teixeira, dono da barbearia" />
+          <span class="sobre-selo">Barbearia 01 de Diadema</span>
         </div>
       </div>
     </section>
 
     <!-- Serviços -->
-    <section class="secao" id="servicos">
+    <section class="secao secao--centro" id="servicos">
       <p class="kicker">Cardápio</p>
       <h2>Serviços</h2>
       <p class="sub">Toque num serviço para escolher e agendar. Sem sinal — pagamento só na barbearia.</p>
@@ -87,31 +102,49 @@
     </section>
 
     <!-- Galeria -->
-    <section class="secao" id="galeria">
+    <section class="secao secao--centro" id="galeria">
       <p class="kicker">Galeria</p>
       <h2>Trabalho da barbearia</h2>
       <div class="galeria-grade">
-        <img src="images/corte-1.jpg" alt="Corte degradê" />
-        <img src="images/corte-2.jpg" alt="Corte social" />
-        <img src="images/corte-3.jpg" alt="Corte na tesoura" />
-        <img src="images/corte-4.jpg" alt="Corte e acabamento" />
-        <img src="images/penteado.jpg" alt="Penteado" />
+        <figure class="galeria-item galeria-destaque">
+          <img src="images/corte-1.jpg" alt="Corte degradê" />
+          <figcaption>Corte degradê</figcaption>
+        </figure>
+        <figure class="galeria-item">
+          <img src="images/corte-2.jpg" alt="Corte social" />
+          <figcaption>Corte social</figcaption>
+        </figure>
+        <figure class="galeria-item">
+          <img src="images/corte-3.jpg" alt="Corte na tesoura" />
+          <figcaption>Corte na tesoura</figcaption>
+        </figure>
+        <figure class="galeria-item">
+          <img src="images/corte-4.jpg" alt="Corte e acabamento" />
+          <figcaption>Corte e acabamento</figcaption>
+        </figure>
+        <figure class="galeria-item">
+          <img src="images/penteado.jpg" alt="Penteado" />
+          <figcaption>Penteado</figcaption>
+        </figure>
       </div>
     </section>
 
     <!-- Agendamento -->
-    <section class="secao" id="agendar">
+    <section class="secao secao--centro" id="agendar">
       <p class="kicker">Agendamento</p>
       <h2>Marca teu horário</h2>
-      <ol class="passos" id="passos">
-        <li data-passo="1" class="ativo">1 · Serviço</li>
-        <li data-passo="2">2 · Profissional</li>
-        <li data-passo="3">3 · Data</li>
-        <li data-passo="4">4 · Horário</li>
-        <li data-passo="5">5 · Seus dados</li>
-      </ol>
-      <div class="wizard" id="wizard"></div>
-      <div class="confirmacao" id="confirmacao" hidden></div>
+      <p class="sub">Escolha o serviço, o profissional, a data e o horário — e confirme com seu nome e WhatsApp.</p>
+      <div class="agendar-painel">
+        <ol class="passos" id="passos">
+          <li data-passo="1">1 · Serviço</li>
+          <li data-passo="2">2 · Profissional</li>
+          <li data-passo="3">3 · Data</li>
+          <li data-passo="4">4 · Horário</li>
+          <li data-passo="5">5 · Seus dados</li>
+        </ol>
+        <div class="wizard" id="wizard"></div>
+        <div class="confirmacao" id="confirmacao" hidden></div>
+      </div>
     </section>
   </main>
 
@@ -119,20 +152,19 @@
     <p><strong>BruninDucorte</strong> · Barbearia 01 de Diadema</p>
     <p>Rua Rossini 37, Casa Grande, Diadema – SP · Seg a sáb, 9h às 20h</p>
     <p><a href="https://instagram.com/brunin.ducorte" target="_blank" rel="noopener">@brunin.ducorte</a> · <a href="https://wa.me/5511986407967" target="_blank" rel="noopener">(11) 98640-7967</a></p>
-    <p>© <span id="ano"></span> Barbearia BruninDucorte · Bruno Teixeira</p>
+    <p>© <span id="ano">2026</span> Barbearia BruninDucorte · Bruno Teixeira</p>
   </footer>
 
-  <!-- Assistente BruninDucorte -->
   <button class="assistente-botao" id="assistente-botao" aria-label="Abrir assistente BruninDucorte">💬</button>
   <section class="assistente" id="assistente" hidden>
     <header>
       <strong>Assistente BruninDucorte</strong>
       <button id="assistente-fechar" aria-label="Fechar assistente">✕</button>
     </header>
-    <div class="assistente-mensagens" id="assistente-mensagens"></div>
-    <div class="assistente-opcoes" id="assistente-opcoes"></div>
-    <form class="assistente-form" id="assistente-form">
-      <input id="assistente-input" type="text" placeholder="Ex.: quero um degradê com barba" autocomplete="off" />
+    <div id="assistente-mensagens"></div>
+    <div id="assistente-opcoes"></div>
+    <form id="assistente-form">
+      <input id="assistente-input" type="text" placeholder="Ex.: quero degradê com barba" autocomplete="off" />
       <button type="submit">Enviar</button>
     </form>
     <p class="assistente-nota">Atendimento automático da barbearia, na hora.</p>
