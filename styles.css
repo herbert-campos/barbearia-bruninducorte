@@ -974,3 +974,44 @@ input, select { font: inherit; }
   .assistente { right: 12px; bottom: 92px; }
   .resumo-cards { grid-template-columns: repeat(2, 1fr); }
 }
+/* ---------- Polimento do vídeo da Porsche + interações (18/11/2026) ---------- */
+/* Vídeo da Porsche (v1): polimento de qualidade na exibição — cores e luz amarela
+   mais fortes, imagem mais nítida. O arquivo do vídeo não foi alterado. */
+.porsche-video {
+  filter: saturate(1.18) contrast(1.07) brightness(1.03);
+}
+
+/* Capa + botão de play sobre o vídeo da Porsche (tocar na tela). */
+.porsche-video-capa { position: relative; }
+.porsche-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 196, 0, .94);
+  color: #111;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, .28), 0 0 36px rgba(255, 196, 0, .55);
+  transition: transform .25s ease, box-shadow .25s ease;
+  z-index: 3;
+}
+.porsche-play:hover { transform: translate(-50%, -50%) scale(1.07); }
+.porsche-play[hidden] { display: none; }
+
+/* Fotos do Sobre (Bruninho de perto e na moto): zoom + brilho amarelo ao passar e ao clicar. */
+.sobre-fotos img {
+  cursor: pointer;
+  transition: transform .45s ease, box-shadow .45s ease, filter .45s ease;
+}
+.sobre-fotos img:hover,
+.sobre-fotos img.ativo {
+  transform: scale(1.05);
+  filter: brightness(1.08) saturate(1.12);
+  box-shadow: 0 0 0 2px var(--amarelo), 0 0 32px rgba(255, 196, 0, .45);
+}
