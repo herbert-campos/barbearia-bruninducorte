@@ -615,3 +615,32 @@ document.addEventListener("DOMContentLoaded", function () {
     umDiaVideo.addEventListener("ended", function () { mostrarPlay(true); });
   }
 });
+/* ---------- Foto do Karl na escolha de profissional (18/11/2026) ---------- */
+/* O Karl é o único profissional com foto: ela aparece na escolha de
+   profissional do agendamento (passo 2) e na seção do time (index.html).
+   Brunin e TZ continuam com a inicial. A foto fica num círculo com borda
+   amarela sobre fundo neutro dark — o fundo claro da foto original fica
+   dentro do círculo; para fundo realmente preto seria preciso editar a imagem. */
+document.addEventListener("DOMContentLoaded", function () {
+  var FOTO_KARL = "images/karl.jpg";
+  function fotoOuInicial(p) {
+    if (p.id === "karl") return '<img class="opcao-foto" src="' + FOTO_KARL + '" alt="Foto de Karl">';
+    return '<span class="opcao-inicial">' + p.inicial + "</span>";
+  }
+  function decorarProfissionais() {
+    var botoes = wizard.querySelectorAll("[data-escolher-profissional]");
+    botoes.forEach(function (botao) {
+      if (botao.querySelector(".opcao-foto, .opcao-inicial")) return;
+      var p = profissionalPorId(botao.getAttribute("data-escolher-profissional"));
+      if (!p) return;
+      botao.insertAdjacentHTML("afterbegin", fotoOuInicial(p));
+      botao.classList.add("opcao-prof");
+    });
+  }
+  var renderWizardBase = renderWizard;
+  renderWizard = function () {
+    renderWizardBase();
+    decorarProfissionais();
+  };
+  decorarProfissionais();
+});
