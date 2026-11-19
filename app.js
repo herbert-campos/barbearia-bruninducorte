@@ -644,3 +644,6 @@ document.addEventListener("DOMContentLoaded", function () {
   };
   decorarProfissionais();
 });
+/* O elemento do agendamento (#wizard) como variável global: o bloco da foto
+   do Karl (acima) usa "wizard" e ele só existia dentro das funções. */
+var wizard = document.getElementById("wizard");
