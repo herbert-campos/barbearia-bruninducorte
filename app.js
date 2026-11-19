@@ -579,3 +579,39 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+// ---------- Vídeo real "Um dia na Barbearia" (18/11/2026) ----------
+// Toca COM SOM ao tocar no play. Sem loop, sem autoplay.
+document.addEventListener("DOMContentLoaded", function () {
+  var umDiaVideo = document.querySelector(".um-dia-video");
+  if (umDiaVideo) {
+    umDiaVideo.loop = false;
+    umDiaVideo.removeAttribute("loop");
+    umDiaVideo.removeAttribute("autoplay");
+    umDiaVideo.removeAttribute("muted");
+    umDiaVideo.muted = false;
+
+    // Botão de play sobre o vídeo (tocar na tela).
+    var midia = umDiaVideo.parentElement;
+    var capa = document.createElement("div");
+    capa.className = "um-dia-video-capa";
+    midia.insertBefore(capa, umDiaVideo);
+    capa.appendChild(umDiaVideo);
+    var botaoPlay = document.createElement("button");
+    botaoPlay.type = "button";
+    botaoPlay.className = "um-dia-play";
+    botaoPlay.setAttribute("aria-label", "Assistir ao vídeo Um dia na Barbearia, com som");
+    botaoPlay.textContent = "▶";
+    capa.appendChild(botaoPlay);
+    var mostrarPlay = function (mostrar) {
+      botaoPlay.hidden = !mostrar;
+    };
+    botaoPlay.addEventListener("click", function () {
+      if (umDiaVideo.ended) umDiaVideo.currentTime = 0;
+      var p = umDiaVideo.play();
+      if (p && p.catch) p.catch(function () {});
+    });
+    umDiaVideo.addEventListener("play", function () { mostrarPlay(false); });
+    umDiaVideo.addEventListener("pause", function () { mostrarPlay(true); });
+    umDiaVideo.addEventListener("ended", function () { mostrarPlay(true); });
+  }
+});
