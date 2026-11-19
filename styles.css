@@ -1058,3 +1058,34 @@ input, select { font: inherit; }
   display: block;
   background: #101014;
 }
+/* ---------- Foto do Karl na escolha de profissional (18/11/2026) ---------- */
+/* Passo 2 do agendamento: o Karl aparece com a foto num círculo com borda
+   amarela; Brunin e TZ aparecem com a inicial no círculo. Fundo neutro dark
+   (#101014) atrás da foto, combinando com o card. O fundo claro da foto
+   original fica dentro do círculo; para fundo realmente preto seria preciso
+   editar a imagem. */
+.opcao-prof .opcao-foto {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 30%;
+  border: 1.5px solid var(--amarelo);
+  background: #101014;
+  flex: 0 0 auto;
+}
+.opcao-prof .opcao-inicial {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #2a2a31, #101014);
+  border: 1.5px solid var(--amarelo);
+  color: var(--amarelo);
+  font-family: "Oswald", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
