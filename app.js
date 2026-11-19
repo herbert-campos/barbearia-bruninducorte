@@ -487,3 +487,95 @@ document.addEventListener("DOMContentLoaded", function () {
     responderAssistente(texto);
   });
 });
+// ---------- Regras de reprodução dos vídeos (18/11/2026) ----------
+// Herói: roda sempre, em loop, sem parar.
+// Porsche (v1): roda só uma vez — ao chegar na seção do Bruninho e ao tocar no play. Sem loop.
+document.addEventListener("DOMContentLoaded", function () {
+  // Vídeo do herói: nunca pode parar — se pausar ou terminar, volta a tocar.
+  var heroVideo = document.querySelector(".hero-video");
+  if (heroVideo) {
+    heroVideo.loop = true;
+    heroVideo.muted = true;
+    var tocarHeroi = function () {
+      if (heroVideo.paused) {
+        var p = heroVideo.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+    };
+    var tentarHeroi = function () { tocarHeroi(); };
+    heroVideo.addEventListener("pause", tocarHeroi);
+    heroVideo.addEventListener("ended", tocarHeroi);
+    heroVideo.addEventListener("play", function () {
+      document.removeEventListener("pointerdown", tentarHeroi);
+      document.removeEventListener("keydown", tentarHeroi);
+    });
+    document.addEventListener("pointerdown", tentarHeroi);
+    document.addEventListener("keydown", tentarHeroi);
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) tocarHeroi();
+    });
+    tocarHeroi();
+  }
+
+  // Vídeo da Porsche (v1): sem loop; toca uma vez ao chegar na seção e ao tocar no play.
+  var porscheVideo = document.querySelector(".porsche-video");
+  if (porscheVideo) {
+    porscheVideo.loop = false;
+    porscheVideo.removeAttribute("loop");
+    porscheVideo.removeAttribute("autoplay");
+    var porscheTocou = false;
+    var tocarPorsche = function (comSom) {
+      if (comSom) porscheVideo.muted = false;
+      if (porscheVideo.ended) porscheVideo.currentTime = 0;
+      var p = porscheVideo.play();
+      if (p && p.catch) p.catch(function () {});
+      porscheTocou = true;
+    };
+
+    // Botão de play sobre o vídeo (tocar na tela).
+    var midia = porscheVideo.parentElement;
+    var capa = document.createElement("div");
+    capa.className = "porsche-video-capa";
+    midia.insertBefore(capa, porscheVideo);
+    capa.appendChild(porscheVideo);
+    var botaoPlay = document.createElement("button");
+    botaoPlay.type = "button";
+    botaoPlay.className = "porsche-play";
+    botaoPlay.setAttribute("aria-label", "Assistir ao clipe da Porsche");
+    botaoPlay.textContent = "▶";
+    capa.appendChild(botaoPlay);
+    var mostrarPlay = function (mostrar) {
+      botaoPlay.hidden = !mostrar;
+    };
+    botaoPlay.addEventListener("click", function () {
+      tocarPorsche(true);
+    });
+    porscheVideo.addEventListener("play", function () { mostrarPlay(false); });
+    porscheVideo.addEventListener("pause", function () { mostrarPlay(true); });
+    porscheVideo.addEventListener("ended", function () { mostrarPlay(true); });
+
+    // Toca uma vez (sem som) quando a seção entra na tela.
+    if ("IntersectionObserver" in window) {
+      var observador = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (entrada) {
+          if (entrada.isIntersecting && !porscheTocou) {
+            tocarPorsche(false);
+            observador.disconnect();
+          }
+        });
+      }, { threshold: 0.4 });
+      observador.observe(porscheVideo);
+    }
+  }
+
+  // Fotos do Sobre (Bruninho de perto e na moto): ao clicar, alterna zoom + brilho amarelo.
+  document.querySelectorAll(".sobre-fotos img").forEach(function (foto) {
+    foto.addEventListener("click", function () { foto.classList.toggle("ativo"); });
+    foto.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        foto.classList.toggle("ativo");
+      }
+    });
+  });
+});
