@@ -1089,3 +1089,13 @@ input, select { font: inherit; }
   justify-content: center;
   flex: 0 0 auto;
 }
+/* ---------- Fotos do Sobre sem a barra de status do celular (18/11/2026) ---------- */
+/* As fotos de perto são prints de celular (738×1600): a barra de status
+   (hora, sinal, bateria) ocupa os primeiros ~7% da imagem. O recorte abaixo
+   esconde essa faixa e mantém o Bruninho e a moto. Se o Herbert mandar as
+   fotos já recortadas, remover esta regra. */
+.sobre-fotos img {
+  aspect-ratio: 1 / 2;
+  object-fit: cover;
+  object-position: center 100%;
+}
