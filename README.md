@@ -61,3 +61,12 @@ O vídeo do topo está em `video/` com o nome original gerado
 Ele é referenciado por esse nome em `index.html`. Não renomeie arquivos grandes
 pelo editor web do GitHub: arquivos acima de ~1 MB perdem o conteúdo na renomeação
 por lá (foi o que aconteceu na primeira tentativa e o vídeo teve que ser enviado de novo).
+## Novidades (18/11/2026)
+
+- **Redesign profissional:** tipografia Oswald + Inter, herói com chips e 2 CTAs, cards de serviço com foto e selo de ícone animado, galeria com legendas, Sobre com lista de informações e painel admin com barra visual 40/60.
+- **Interação a cada clique:** cada um dos 15 serviços tem foto e ícone SVG próprio que anima ao clicar/selecionar, com selo "✓ Escolhido" e brilho amarelo.
+- **Seção Porsche:** foto do Bruninho na Porsche branca com interação (zoom, brilho amarelo e revelação da legenda ao clicar) e o clipe cinematográfico v1. Regras de reprodução: o vídeo do herói fica sempre em loop; o da Porsche roda só uma vez ao chegar na seção e ao tocar na tela (botão ▶, com som ao tocar). O vídeo v2 foi descartado — fica o v1.
+- **Seção "Um dia na Barbearia":** vídeo real da barbearia, com som ao tocar na tela, sem autoplay e sem loop. Créditos mantidos: "Um dia na favela" — Liniker MC · Brunin Ducorte · Mczk. Atenção: o arquivo enviado toca ~16 s no navegador (a mensagem original dizia 1:06); se o vídeo completo for enviado, é só substituir o arquivo em `video/`.
+- **Foto do Karl:** já está no site — no time (círculo de 92 px com borda amarela, mesmo tamanho dos avatares) e na escolha de profissional do agendamento (passo 2, círculo de 40 px com a foto; Brunin e TZ aparecem com a inicial). A foto do TZ continua pendente. O fundo claro da foto original fica dentro do círculo; para fundo realmente preto seria preciso editar a imagem.
+- **Fotos do Sobre:** as duas fotos de perto do Bruninho (de óculos/corrente e na moto BMW F900) com interação de zoom e brilho amarelo. Como são prints de celular, a barra de status do topo é escondida por um recorte em CSS (`.sobre-fotos img` com `aspect-ratio: 1 / 2`).
+- **Vídeos:** nunca renomeie arquivos grandes de vídeo pelo editor web do GitHub — o conteúdo se perde (ver "Observação sobre o vídeo"). O vídeo da Porsche e o vídeo real mantêm o nome original gerado.
